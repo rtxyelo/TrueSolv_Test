@@ -8,4 +8,6 @@ public with sharing class ItemPurchaseToolVFController {
 	public Id getAccountId() {
 		return accountId;
 	}
+
+
 }
