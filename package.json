@@ -1,0 +1,7 @@
+{
+  "name": "TrueSolv",
+  "version": "1.0.0",
+  "dependencies": {
+    "lwc": "^8.28.2"
+  }
+}
