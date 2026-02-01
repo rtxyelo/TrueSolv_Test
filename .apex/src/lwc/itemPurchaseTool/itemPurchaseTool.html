@@ -1,0 +1,12 @@
+<template>
+    <lightning-card title="Account Info">
+        <template if:true={accountData}>
+            <p>Name: {accountData.name}</p>
+            <p>Number: {accountData.number}</p>
+            <p>Industry: {accountData.industry}</p>
+        </template>
+        <template if:false={accountData}>
+            <p>Loading...</p>
+        </template>
+    </lightning-card>
+</template>

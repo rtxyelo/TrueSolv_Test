@@ -1,0 +1,23 @@
+<apex:page standardController="Account" extensions="ItemPurchaseToolVFController" lightningStyleSheets="true">
+    <div id="lwcContainer"></div>
+
+    <script src="/lightning/lightning.out.js"></script>
+    <script>
+        // Получаем recordId из Apex контроллера
+        var accountId = "{!JSENCODE(accountId)}";
+        console.log('VF accountId:', accountId);
+
+        // Загружаем Aura App
+        $Lightning.use("c:ItemPurchaseToolApp", function() {
+            $Lightning.createComponent(
+                "c:itemPurchaseTool", // LWC внутри Aura контейнера
+                { recordId: accountId },
+                "lwcContainer",
+                function(cmp, status, errorMessage) {
+                    console.log('status:', status);
+                    if (errorMessage) console.error(errorMessage);
+                }
+            );
+        });
+    </script>
+</apex:page>
