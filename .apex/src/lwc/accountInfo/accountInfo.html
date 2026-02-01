@@ -1,0 +1,15 @@
+<template>
+    <lightning-card title="Account Info">
+        <p>Name: {account.name}</p>
+        <p>Number: {account.number}</p>
+        <p>Industry: {account.industry}</p>
+        <p>IsManager: {isManager}</p>
+
+        <lightning-button
+                label="Create Item"
+                class="slds-m-top_small"
+                onclick={handleCreateItemClick}
+                disabled={createItemDisabled}>
+        </lightning-button>
+    </lightning-card>
+</template>

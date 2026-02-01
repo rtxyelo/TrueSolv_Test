@@ -6,19 +6,13 @@ const FIELDS = ['Account.Name', 'Account.AccountNumber', 'Account.Industry'];
 
 export default class ItemPurchaseTool extends LightningElement {
     @api recordId;
+
     accountData;
     isManager = false;
+    isCreateModalOpen = false;
 
     @wire(getRecord, { recordId: '$recordId', fields: FIELDS })
     wiredAccount({ error, data }) {
-        updateIsManager()
-            .then(result => {
-                this.isManager = result;
-            })
-            .catch(error => {
-                console.error('Error updating IsManager:', error);
-            });
-
         if (data) {
             this.accountData = {
                 name: data.fields.Name.value,
@@ -31,9 +25,27 @@ export default class ItemPurchaseTool extends LightningElement {
     }
 
     connectedCallback() {
-        console.log('recordId:', this.recordId);
+        updateIsManager()
+            .then(result => {
+                this.isManager = result;
+            })
+            .catch(error => {
+                console.error('Error updating IsManager:', error);
+            });
 
+        console.log('recordId:', this.recordId);
     }
 
+    handleOpenCreateItem() {
+        this.isCreateModalOpen = true;
+    }
 
+    handleCloseCreateItem() {
+        this.isCreateModalOpen = false;
+    }
+
+    handleItemCreated() {
+        this.isCreateModalOpen = false;
+        // позже здесь будет refresh items
+    }
 }

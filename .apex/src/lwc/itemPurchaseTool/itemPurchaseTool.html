@@ -1,13 +1,16 @@
 <template>
-    <lightning-card title="Account Info">
-        <template if:true={accountData}>
-            <p>Name: {accountData.name}</p>
-            <p>Number: {accountData.number}</p>
-            <p>Industry: {accountData.industry}</p>
-            <p>IsManager: {isManager}</p>
-        </template>
-        <template if:false={accountData}>
-            <p>Loading...</p>
-        </template>
-    </lightning-card>
+    <template if:true={accountData}>
+        <c-account-info
+                account={accountData}
+                is-manager={isManager}
+                oncreateitem={handleOpenCreateItem}>
+        </c-account-info>
+    </template>
+
+    <template if:true={isCreateModalOpen}>
+        <c-create-item-modal
+                onclose={handleCloseCreateItem}
+                onitemsuccess={handleItemCreated}>
+        </c-create-item-modal>
+    </template>
 </template>
