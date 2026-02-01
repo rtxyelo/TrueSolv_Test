@@ -1,28 +1,28 @@
 public with sharing class ItemService {
 
 	@AuraEnabled(cacheable=true)
-	public static List<Item__c> getItems(
-			String family,
-			String type,
-			String searchKey
-			) {
-		String searchPattern = '%' + searchKey + '%';
-
-		String soql =
-				'SELECT Id, Name, Description__c, Type__c, Family__c, Price__c, Image__c ' +
-				'FROM Item__c ' +
-				'WHERE 1 = 1';
+	public static List<Item__c> getItems(String family, String type, String searchKey) {
+		// Объявляем список для хранения условий
+		List<String> conditions = new List<String>();
 
 		if (String.isNotBlank(family)) {
-			soql += ' AND Family__c = :family';
+			conditions.add('Family__c = :family');
 		}
 
 		if (String.isNotBlank(type)) {
-			soql += ' AND Type__c = :type';
+			conditions.add('Type__c = :type');
 		}
 
 		if (String.isNotBlank(searchKey)) {
-			soql += ' AND (Name LIKE :searchPattern OR Description__c LIKE :searchPattern)';
+			conditions.add('(Name LIKE :searchPattern OR Description__c LIKE :searchPattern)');
+		}
+
+		String searchPattern = '%' + searchKey + '%';
+
+		String soql = 'SELECT Id, Name, Description__c, Type__c, Family__c, Price__c, Image__c FROM Item__c';
+
+		if (!conditions.isEmpty()) {
+			soql += ' WHERE ' + String.join(conditions, ' AND ');
 		}
 
 		soql += ' ORDER BY Name';
