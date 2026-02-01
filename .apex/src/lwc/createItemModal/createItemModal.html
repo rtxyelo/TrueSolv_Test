@@ -8,12 +8,13 @@
             <div class="slds-modal__content">
                 <lightning-record-edit-form
                         object-api-name="Item__c"
-                        onsuccess={handleSuccess}>
+                        onsuccess={handleSuccess}
+                        onsubmit={handleSubmit}>
 
                     <lightning-input-field field-name="Name"></lightning-input-field>
                     <lightning-input-field field-name="Description__c"></lightning-input-field>
-                    <lightning-input-field field-name="Type__c"></lightning-input-field>
-                    <lightning-input-field field-name="Family__c"></lightning-input-field>
+                    <lightning-input-field field-name="Type__c" data-field="Type__c"></lightning-input-field>
+                    <lightning-input-field field-name="Family__c" data-field="Family__c"></lightning-input-field>
                     <lightning-input-field field-name="Price__c"></lightning-input-field>
 
                     <lightning-button
@@ -22,6 +23,7 @@
                             class="slds-m-top_small">
                     </lightning-button>
                 </lightning-record-edit-form>
+
             </div>
 
             <footer class="slds-modal__footer">

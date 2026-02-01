@@ -1,0 +1,44 @@
+<template>
+    <lightning-card title="Items">
+        <div class="slds-p-around_small">
+            <!-- Filters -->
+            <lightning-combobox
+                    label="Family"
+                    value={selectedFamily}
+                    options={familyOptions}
+                    onchange={handleFamilyChange}>
+            </lightning-combobox>
+
+            <lightning-combobox
+                    label="Type"
+                    value={selectedType}
+                    options={typeOptions}
+                    onchange={handleTypeChange}>
+            </lightning-combobox>
+
+            <!-- Search -->
+            <lightning-input
+                    type="search"
+                    label="Search"
+                    placeholder="Search by Name or Description"
+                    value={searchKey}
+                    onchange={handleSearchChange}>
+            </lightning-input>
+
+            <!-- Item count -->
+            <p class="slds-m-top_small">Items found: {itemsCount}</p>
+
+            <!-- Items Grid -->
+            <template if:true={items}>
+                <div class="slds-grid slds-wrap">
+                    <template for:each={items} for:item="item">
+                        <c-item-tile key={item.Id} item={item}></c-item-tile>
+                    </template>
+                </div>
+            </template>
+            <template if:true={isLoading}>
+                <p>Loading...</p>
+            </template>
+        </div>
+    </lightning-card>
+</template>
