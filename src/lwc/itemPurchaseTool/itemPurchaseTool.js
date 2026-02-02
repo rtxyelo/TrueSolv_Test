@@ -1,4 +1,4 @@
-import { LightningElement, api, wire } from 'lwc';
+import {LightningElement, api, wire, track} from 'lwc';
 import { getRecord } from 'lightning/uiRecordApi';
 import updateIsManager from '@salesforce/apex/CheckUserIsManagerController.updateIsManager';
 

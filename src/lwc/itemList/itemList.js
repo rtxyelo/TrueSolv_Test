@@ -16,6 +16,9 @@ export default class ItemList extends LightningElement {
     @track familyOptions = [];
     @track typeOptions = [];
 
+    @track selectedItem;
+    @track isDetailsModalOpen = false;
+
     connectedCallback() {
         this.loadPicklistOptions(getFamilies, 'familyOptions');
         this.loadPicklistOptions(getTypes, 'typeOptions');
@@ -56,5 +59,15 @@ export default class ItemList extends LightningElement {
 
     handleSearchChange(event) {
         this.searchKey = event.target.value;
+    }
+
+    handleShowDetails(event) {
+        this.selectedItem = event.detail;
+        this.isDetailsModalOpen = true;
+    }
+
+    handleCloseDetails() {
+        this.isDetailsModalOpen = false;
+        this.selectedItem = null;
     }
 }

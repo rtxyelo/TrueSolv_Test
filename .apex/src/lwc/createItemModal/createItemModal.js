@@ -96,7 +96,7 @@ export default class CreateItemModal extends LightningElement {
             return;
         }*/
 
-        // связь с Account
+
         fields.Account__c = this.recordId;
 
         // 🖼 получаем картинку
@@ -104,7 +104,7 @@ export default class CreateItemModal extends LightningElement {
             const imageUrl = await fetchImageUrl({
                 itemName: fields.Name
             });
-            console.log('Unsplash URL:', imageUrl); // 🔹 проверь в консоли
+            console.log('Unsplash URL:', imageUrl);
             if (imageUrl) {
                 fields.Image__c = imageUrl;
             }
