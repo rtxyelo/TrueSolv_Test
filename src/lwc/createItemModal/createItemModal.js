@@ -104,7 +104,7 @@ export default class CreateItemModal extends LightningElement {
             const imageUrl = await fetchImageUrl({
                 itemName: fields.Name
             });
-
+            console.log('Unsplash URL:', imageUrl); // 🔹 проверь в консоли
             if (imageUrl) {
                 fields.Image__c = imageUrl;
             }

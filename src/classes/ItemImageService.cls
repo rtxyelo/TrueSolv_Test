@@ -3,6 +3,7 @@ public with sharing class ItemImageService {
 	@AuraEnabled
 	public static String fetchImageUrl(String itemName) {
 		try {
+			System.debug('Item name: ' + itemName);
 			String accessKey = 'LLHvQYuwxRVvzIjJH8V_dC5A66D19_sTpm_3fcdozVc';
 			String endpoint = 'https://api.unsplash.com/search/photos?query=' + EncodingUtil.urlEncode(itemName, 'UTF-8');
 
@@ -14,7 +15,11 @@ public with sharing class ItemImageService {
 			Http http = new Http();
 			HttpResponse res = http.send(req);
 
+			System.debug('HTTP status: ' + res.getStatus());
+
 			if (res.getStatusCode() == 200) {
+				System.debug('HTTP status: ' + res.getStatus());
+				System.debug('HTTP body: ' + res.getBody());
 				// JSON парсим
 				Map<String, Object> json = (Map<String, Object>) JSON.deserializeUntyped(res.getBody());
 				List<Object> results = (List<Object>) json.get('results');
