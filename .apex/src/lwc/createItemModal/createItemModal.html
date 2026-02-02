@@ -10,8 +10,8 @@
                         object-api-name="Item__c"
                         onchange={handleFieldChange}
                         onsuccess={handleSuccess}
-                        onsubmit={handleSubmit}>
-<!--                        record-id={recordId}>-->
+                        onsubmit={handleSubmit}
+                        onerror={handleError}>
 
                     <lightning-input-field field-name="Name"></lightning-input-field>
                     <lightning-input-field field-name="Description__c"></lightning-input-field>
@@ -31,7 +31,7 @@
             </div>
 
             <footer class="slds-modal__footer">
-                <lightning-button label="Cancel" field-name="Account__c" value={recordId} onclick={close}></lightning-button>
+                <lightning-button label="Cancel" onclick={close}></lightning-button>
             </footer>
         </div>
     </section>

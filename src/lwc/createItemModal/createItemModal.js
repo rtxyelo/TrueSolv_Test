@@ -1,6 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import fetchImageUrl from '@salesforce/apex/ItemImageService.fetchImageUrl';
+import checkItemName from '@salesforce/apex/ItemService.checkItemName';
 
 export default class CreateItemModal extends LightningElement {
     @api recordId;
@@ -70,36 +71,26 @@ export default class CreateItemModal extends LightningElement {
     }
 
     async handleSubmit(event) {
-        event.preventDefault(); // ⛔ останавливаем стандартный submit ОДИН раз
-
+        this.isSaveDisabled = true;
+        event.preventDefault();
         const fields = event.detail.fields;
 
-/*        // ❗ ВАЖНО: lightning-input-field для picklist
-        // возвращает null / '' если не выбран реальный value
-        // "None" — это label, а не value (если не задано вручную)
-
-        if (!fields.Type__c || fields.Type__c === 'None') {
-            this.showToast(
-                'Error',
-                'Please select a Type for the item.',
-                'error'
-            );
+        try {
+            const exists = await checkItemName({ name: fields.Name });
+            if (exists) {
+                this.showToast('Error', 'An item with this Name already exists.', 'error');
+                this.isSaveDisabled = false;
+                return; // останавливаем сабмит
+            }
+        } catch (error) {
+            console.error('Error checking item name:', error);
+            this.showToast('Error', 'Unable to check item name.', 'error');
+            this.isSaveDisabled = false;
             return;
         }
 
-        if (!fields.Family__c || fields.Family__c === 'None') {
-            this.showToast(
-                'Error',
-                'Please select a Family for the item.',
-                'error'
-            );
-            return;
-        }*/
-
-
         fields.Account__c = this.recordId;
 
-        // 🖼 получаем картинку
         try {
             const imageUrl = await fetchImageUrl({
                 itemName: fields.Name
@@ -110,14 +101,32 @@ export default class CreateItemModal extends LightningElement {
             }
         } catch (error) {
             console.error('Unsplash error:', error);
-            // здесь НЕ блокируем сохранение
         }
 
-        // ✅ РУЧНОЙ submit с уже дополненными полями
         this.template
             .querySelector('lightning-record-edit-form')
             .submit(fields);
+
+        this.isSaveDisabled = false;
     }
 
+    handleError(event) {
+        console.error('Save error:', event.detail);
+
+        let message = 'Item with same name already exist!';
+
+        // Duplicate / Validation error
+        if (event.detail && event.detail.message) {
+            message = event.detail.message;
+        }
+
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Save failed',
+                message,
+                variant: 'error'
+            })
+        );
+    }
 
 }

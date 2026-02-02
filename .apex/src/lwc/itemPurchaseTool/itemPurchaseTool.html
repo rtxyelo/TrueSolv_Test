@@ -3,7 +3,8 @@
         <c-account-info
                 account={accountData}
                 is-manager={isManager}
-                oncreateitem={handleOpenCreateItem}>
+                oncreateitem={handleOpenCreateItem}
+                onshowcart={handleShowCart}>
         </c-account-info>
     </template>
 
@@ -14,6 +15,15 @@
         </c-create-item-modal>
     </template>
 
-    <c-item-list record-id={recordId}></c-item-list>
+    <c-item-list record-id={recordId} oncartupdate={handleCartUpdate}></c-item-list>
+
+    <!-- Cart Modal -->
+    <template if:true={isCartOpen}>
+        <c-cart-modal
+                cart-items={cart}
+                onclose={handleCloseCart}
+                onremoveone={handleRemoveOne}>
+        </c-cart-modal>
+    </template>
 
 </template>

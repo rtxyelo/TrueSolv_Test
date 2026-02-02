@@ -33,7 +33,7 @@
                 <div class="slds-grid slds-wrap">
                     <template for:each={items} for:item="item">
 <!--                        <c-item-tile key={item.Id} item={item}></c-item-tile>-->
-                        <c-item-tile key={item.Id} item={item} onshowdetails={handleShowDetails} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3"></c-item-tile>
+                        <c-item-tile key={item.Id} item={item} onshowdetails={handleShowDetails} onaddtocart={handleAddToCart} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3"></c-item-tile>
                     </template>
                 </div>
             </template>

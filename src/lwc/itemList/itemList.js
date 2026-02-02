@@ -19,6 +19,8 @@ export default class ItemList extends LightningElement {
     @track selectedItem;
     @track isDetailsModalOpen = false;
 
+    @track cart = []; // { item: Item__c, quantity: number }
+
     connectedCallback() {
         this.loadPicklistOptions(getFamilies, 'familyOptions');
         this.loadPicklistOptions(getTypes, 'typeOptions');
@@ -69,5 +71,24 @@ export default class ItemList extends LightningElement {
     handleCloseDetails() {
         this.isDetailsModalOpen = false;
         this.selectedItem = null;
+    }
+
+    // диспатчим cart в родительский компонент при каждом изменении
+    updateCart() {
+        this.dispatchEvent(new CustomEvent('cartupdate', { detail: this.cart }));
+    }
+
+    handleAddToCart(event) {
+        const selectedItem = event.detail; // объект Item__c
+        console.log('------------------selectedItem:', selectedItem);
+
+        const index = this.cart.findIndex(c => c.item.Id === selectedItem.Id);
+        if (index > -1) {
+            this.cart[index].quantity += 1;
+        } else {
+            this.cart.push({ item: selectedItem, quantity: 1 });
+        }
+
+        this.updateCart();
     }
 }

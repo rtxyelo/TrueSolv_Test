@@ -11,4 +11,8 @@ export default class AccountInfo extends LightningElement {
     handleCreateItemClick() {
         this.dispatchEvent(new CustomEvent('createitem'));
     }
+
+    handleCartClick() {
+        this.dispatchEvent(new CustomEvent('showcart'));
+    }
 }

@@ -52,4 +52,12 @@ public with sharing class ItemService {
 		return families;
 	}
 
+	@AuraEnabled(cacheable=true)
+	public static Boolean checkItemName(String name) {
+		if (String.isBlank(name)) return false;
+
+		// Проверяем наличие айтема с таким же названием
+		Integer countExisting = [SELECT COUNT() FROM Item__c WHERE Name = :name];
+		return countExisting > 0;
+	}
 }
