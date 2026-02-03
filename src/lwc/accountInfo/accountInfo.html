@@ -1,22 +1,48 @@
 <template>
     <lightning-card title="Account Info">
-        <lightning-button
-                label="Create Item"
-                class="slds-m-top_small"
-                onclick={handleCreateItemClick}
-                disabled={createItemDisabled}>
-        </lightning-button>
+        <div class="slds-p-around_medium slds-grid slds-wrap slds-align-middle slds-grid_align-spread">
 
-        <p>Name: {account.name}</p>
-        <p>Number: {account.number}</p>
-        <p>Industry: {account.industry}</p>
-        <p>IsManager: {isManager}</p>
+            <!-- Левая часть: Create Item -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-12">
+                <lightning-button
+                        label="Create Item"
+                        variant="brand"
+                        onclick={handleCreateItemClick}
+                        disabled={createItemDisabled}>
+                </lightning-button>
+            </div>
 
-        <lightning-button
-                label="Cart"
-                class="slds-m-left_small slds-m-top_small"
-                onclick={handleCartClick}>
-        </lightning-button>
+            <!-- Центр: Account info -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_8-of-12">
+                <div class="slds-grid slds-wrap slds-grid_align-spread slds-align-middle">
 
+                    <div class="slds-col slds-m-horizontal_small">
+                        <p class="slds-text-title_caps">Name</p>
+                        <p class="slds-text-heading_small">{account.name}</p>
+                    </div>
+
+                    <div class="slds-col slds-m-horizontal_small">
+                        <p class="slds-text-title_caps">Number</p>
+                        <p class="slds-text-heading_small">{account.number}</p>
+                    </div>
+
+                    <div class="slds-col slds-m-horizontal_small">
+                        <p class="slds-text-title_caps">Industry</p>
+                        <p class="slds-text-heading_small">{account.industry}</p>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <!-- Правая часть: Cart -->
+            <div class="slds-col slds-size_1-of-1 slds-medium-size_2-of-12 slds-text-align_right">
+                <lightning-button
+                        label="Cart"
+                        onclick={handleCartClick}>
+                </lightning-button>
+            </div>
+
+        </div>
     </lightning-card>
 </template>

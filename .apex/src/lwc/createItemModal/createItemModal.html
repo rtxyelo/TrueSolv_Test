@@ -10,7 +10,6 @@
                         object-api-name="Item__c"
                         onchange={handleFieldChange}
                         onsuccess={handleSuccess}
-                        onsubmit={handleSubmit}
                         onerror={handleError}>
 
                     <lightning-input-field field-name="Name" onchange={handleFieldChange}>></lightning-input-field>
@@ -19,19 +18,22 @@
                     <lightning-input-field field-name="Family__c" data-field="Family__c" onchange={handleFieldChange}>></lightning-input-field>
                     <lightning-input-field field-name="Price__c" onchange={handleFieldChange}>></lightning-input-field>
 
-                    <lightning-button
-                            type="submit"
-                            label="Save"
-                            variant="brand"
-                            class="slds-m-top_small"
-                            disabled={isSaveDisabled}>
-                    </lightning-button>
                 </lightning-record-edit-form>
 
             </div>
 
-            <footer class="slds-modal__footer">
-                <lightning-button label="Cancel" onclick={close}></lightning-button>
+            <footer class="slds-modal__footer slds-grid slds-grid_align-spread">
+                <lightning-button
+                        label="Save"
+                        variant="brand"
+                        onclick={submitForm}
+                        disabled={isSaveDisabled}>
+                </lightning-button>
+
+                <lightning-button
+                        label="Cancel"
+                        onclick={close}>
+                </lightning-button>
             </footer>
         </div>
     </section>

@@ -6,6 +6,7 @@ import checkItemName from '@salesforce/apex/ItemService.checkItemName';
 export default class CreateItemModal extends LightningElement {
     @api recordId;
     isSaveDisabled = true;
+    isSubmitting = false;
     formState = {
         Name: null,
         Description__c: null,
@@ -20,7 +21,7 @@ export default class CreateItemModal extends LightningElement {
     }
 
     handleFieldChange(event) {
-        if (!event) {
+        if (!event || this.isSubmitting) {
             return;
         }
 
@@ -72,52 +73,60 @@ export default class CreateItemModal extends LightningElement {
         this.dispatchEvent(new CustomEvent('itemsuccess'));
     }
 
-    async handleSubmit(event) {
+    async submitForm() {
+        if (this.isSubmitting) {
+            return;
+        }
+
+        console.log("submitForm-=-=-=-=-=-=-=-=-=-=-");
+
+        this.isSubmitting = true;
         this.isSaveDisabled = true;
-        event.preventDefault();
-        const fields = event.detail.fields;
+
+        const fields = {
+            Name: this.formState.Name,
+            Description__c: this.formState.Description__c,
+            Type__c: this.formState.Type__c,
+            Family__c: this.formState.Family__c,
+            Price__c: this.formState.Price__c,
+            Account__c: this.recordId
+        };
 
         try {
             const exists = await checkItemName({ name: fields.Name });
             if (exists) {
                 this.showToast('Error', 'An item with this Name already exists.', 'error');
+                this.isSubmitting = false;
                 this.isSaveDisabled = false;
-                return; // останавливаем сабмит
+                return;
             }
-        } catch (error) {
-            console.error('Error checking item name:', error);
+        } catch (e) {
             this.showToast('Error', 'Unable to check item name.', 'error');
+            this.isSubmitting = false;
             this.isSaveDisabled = false;
             return;
         }
 
-        fields.Account__c = this.recordId;
-
         try {
-            const imageUrl = await fetchImageUrl({
-                itemName: fields.Name
-            });
-            console.log('Unsplash URL:', imageUrl);
+            const imageUrl = await fetchImageUrl({ itemName: fields.Name });
             if (imageUrl) {
                 fields.Image__c = imageUrl;
             }
-        } catch (error) {
-            console.error('Unsplash error:', error);
+        } catch (e) {
+            console.warn(e);
         }
 
         this.template
             .querySelector('lightning-record-edit-form')
             .submit(fields);
-
-        this.isSaveDisabled = false;
     }
+
 
     handleError(event) {
         console.error('Save error:', event.detail);
 
         let message = 'Item with same name already exist!';
 
-        // Duplicate / Validation error
         if (event.detail && event.detail.message) {
             message = event.detail.message;
         }

@@ -79,7 +79,14 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
 
     handleItemCreated() {
         this.isCreateModalOpen = false;
-        // позже здесь будет refresh items
+
+        // items grid refresh
+        setTimeout(() => {
+            const itemList = this.template.querySelector('c-item-list');
+            if (itemList) {
+                itemList.refresh();
+            }
+        }, 0);
     }
 
     handleCartUpdate(event) {
