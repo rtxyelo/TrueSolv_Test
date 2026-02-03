@@ -15,7 +15,7 @@
         </c-create-item-modal>
     </template>
 
-    <c-item-list record-id={recordId} oncartupdate={handleCartUpdate}></c-item-list>
+    <c-item-list record-id={recordId} oncartupdate={handleCartUpdate} is-account-data={isAccountData}></c-item-list>
 
     <!-- Cart Modal -->
     <template if:true={isCartOpen}>

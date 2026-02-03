@@ -13,7 +13,14 @@
                 </template>
 
                 <lightning-button label="Details" onclick={handleDetails} class="slds-m-top_small"></lightning-button>
-                <lightning-button label="Add to Cart" onclick={handleAddToCart} class="slds-m-left_small slds-m-top_small"></lightning-button>
+<!--                <lightning-button label="Add to Cart" onclick={handleAddToCart} class="slds-m-left_small slds-m-top_small"></lightning-button>-->
+                <template if:true={canAddToCart}>
+                    <lightning-button
+                            label="Add to Cart"
+                            onclick={handleAddToCart}>
+                    </lightning-button>
+                </template>
+
             </div>
         </lightning-card>
 <!--    </div>-->

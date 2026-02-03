@@ -28,6 +28,7 @@ export default class CartModal extends LightningElement {
     }
 
     purchaseCart() {
+        // this.close();
         this.dispatchEvent(new CustomEvent('checkout'));
     }
 }

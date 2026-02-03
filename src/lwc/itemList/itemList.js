@@ -5,6 +5,9 @@ import getTypes from '@salesforce/apex/ItemService.getTypes';
 
 export default class ItemList extends LightningElement {
     @api recordId;
+
+    @api isAccountData;
+
     @track items;
     @track isLoading = true;
     @track itemsCount = 0;
@@ -25,6 +28,18 @@ export default class ItemList extends LightningElement {
         this.loadPicklistOptions(getFamilies, 'familyOptions');
         this.loadPicklistOptions(getTypes, 'typeOptions');
     }
+
+    get itemsWithKey() {
+        if (!this.items) {
+            return [];
+        }
+
+        return this.items.map(item => ({
+            ...item,
+            _key: `${item.Id}-${this.isAccountData}`
+        }));
+    }
+
 
     loadPicklistOptions(apexMethod, property) {
         apexMethod()
@@ -79,7 +94,6 @@ export default class ItemList extends LightningElement {
 
     handleAddToCart(event) {
         const selectedItem = event.detail; // объект Item__c
-        console.log('------------------selectedItem:', selectedItem);
 
         const index = this.cart.findIndex(c => c.item.Id === selectedItem.Id);
         if (index > -1) {

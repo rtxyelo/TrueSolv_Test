@@ -19,15 +19,18 @@ export default class CreateItemModal extends LightningElement {
         this.dispatchEvent(new CustomEvent('close'));
     }
 
-    renderedCallback() {
-        this.handleFieldChange();
-    }
-
     handleFieldChange(event) {
+        if (!event) {
+            return;
+        }
+
         const fieldName = event.target.fieldName;
         const value = event.detail.value;
 
-        this.formState[fieldName] = value;
+        this.formState = {
+            ...this.formState,
+            [fieldName]: value
+        };
 
         const { Name, Description__c, Price__c, Type__c, Family__c } = this.formState;
 
@@ -39,7 +42,6 @@ export default class CreateItemModal extends LightningElement {
             Family__c
         );
     }
-
 
     getFieldValue(fieldName) {
         const field = this.template.querySelector(

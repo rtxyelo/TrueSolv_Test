@@ -4,6 +4,7 @@ import updateIsManager from '@salesforce/apex/CheckUserIsManagerController.updat
 import checkout from '@salesforce/apex/PurchaseService.checkout';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from 'lightning/navigation';
+import { CurrentPageReference } from 'lightning/navigation';
 
 const FIELDS = ['Account.Name', 'Account.AccountNumber', 'Account.Industry'];
 
@@ -11,20 +12,35 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
     @api recordId;
 
     accountData;
+    isAccountData = false;
     isManager = false;
     isCreateModalOpen = false;
 
     @track cart = []; // { item: Item__c, quantity: number }
     @track isCartOpen = false;
 
+    @wire(CurrentPageReference)
+    getStateParameters(currentPageReference) {
+        if (currentPageReference?.state?.c__recordId) {
+            this.recordId = currentPageReference.state.c__recordId;
+        } else {
+            this.recordId = null;
+            this.accountData = null;
+            this.isAccountData = false;
+        }
+    }
+
+
     @wire(getRecord, { recordId: '$recordId', fields: FIELDS })
     wiredAccount({ error, data }) {
         if (data) {
+            console.log('Account data loaded', data);
             this.accountData = {
                 name: data.fields.Name.value,
                 number: data.fields.AccountNumber.value,
                 industry: data.fields.Industry.value
             };
+            this.isAccountData = true;
         } else if (error) {
             console.error(error);
         }
@@ -34,6 +50,7 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
         updateIsManager()
             .then(result => {
                 this.isManager = result;
+                console.log('Is Manager:', this.isManager);
             })
             .catch(error => {
                 console.error('Error updating IsManager:', error);
@@ -43,12 +60,18 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
     }
 
     handleOpenCreateItem() {
-        try {
-            this.isCreateModalOpen = true;
-        } catch (error) {
-            console.error('Error opening Create Item modal:', error);
+        if (!this.isManager) {
+            this.showToast(
+                'Access denied',
+                'Only managers can create items',
+                'error'
+            );
+            return;
         }
+
+        this.isCreateModalOpen = true;
     }
+
 
     handleCloseCreateItem() {
         this.isCreateModalOpen = false;
@@ -60,9 +83,7 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
     }
 
     handleCartUpdate(event) {
-        console.log('===============event.detail:', event.detail);
-        this.cart = [...event.detail]; // обновляем cart
-        // this.cart = event.detail;
+        this.cart = [...event.detail];
     }
 
     handleShowCart() {
@@ -86,55 +107,31 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
     }
 
     handleCheckOut() {
+        this.isCartOpen = false;
+
         const dtoCart = this.cart.map(c => ({
             itemId: c.item.Id,
             quantity: c.quantity,
             price: c.item.Price__c
         })); // { item: Item__c, quantity: number }
 
-        console.log('===============CART ITEM Id:', this.cart[0].item.Id);
-        console.log('===============CART ITEM quantity:', this.cart[0].quantity);
-        console.log('===============CART ITEM Price__c:', this.cart[0].item.Price__c);
-        console.log('===============dtoCart ITEM ID:', dtoCart[0].itemId);
-        console.log('===============dtoCart ITEM ID:', dtoCart[0].quantity);
-        console.log('===============dtoCart ITEM ID:', dtoCart[0].price);
-
-        console.log(JSON.stringify(dtoCart, null, 2));
-
         const dtoCartJson = JSON.stringify(dtoCart);
+        console.log(dtoCartJson);
 
         const accId = this.recordId;
 
         checkout({ accountId: accId, cartItemsJson: dtoCartJson })
             .then(result => {
-                // result = Id созданной Purchase__c
-                console.log('NAVIGATE TO ID:', result, typeof result);
-
                 this.showToast('Success', 'Purchase created successfully', 'success');
 
-                // // Навигация на страницу Purchase
-                // this[NavigationMixin.Navigate]({
-                //     type: 'standard__recordPage',
-                //     attributes: {
-                //         recordId: result,
-                //         objectApiName: 'Purchase__c',
-                //         actionName: 'view'
-                //     }
-                // });
-
-                // this[NavigationMixin.GenerateUrl]({
-                //     type: 'standard__recordPage',
-                //     attributes: {
-                //         recordId: result,
-                //         objectApiName: 'Purchase__c',
-                //         actionName: 'view'
-                //     }
-                // }).then(url => {
-                //     window.location.assign(url);
-                // });
-
-                window.location.href = '/' + result;
-
+                this[NavigationMixin.Navigate]({
+                    type: 'standard__recordPage',
+                    attributes: {
+                        recordId: result,
+                        objectApiName: 'Purchase__c',
+                        actionName: 'view'
+                    }
+                });
             })
             .catch(error => {
                 this.showToast('Error', error.body.message, 'error');
@@ -145,5 +142,9 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
         this.dispatchEvent(
             new ShowToastEvent({ title, message, variant })
         );
+    }
+
+    get accountId() {
+        return this.recordId;
     }
 }

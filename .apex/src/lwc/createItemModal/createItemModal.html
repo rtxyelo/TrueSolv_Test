@@ -13,11 +13,11 @@
                         onsubmit={handleSubmit}
                         onerror={handleError}>
 
-                    <lightning-input-field field-name="Name"></lightning-input-field>
-                    <lightning-input-field field-name="Description__c"></lightning-input-field>
-                    <lightning-input-field field-name="Type__c" data-field="Type__c"></lightning-input-field>
-                    <lightning-input-field field-name="Family__c" data-field="Family__c"></lightning-input-field>
-                    <lightning-input-field field-name="Price__c"></lightning-input-field>
+                    <lightning-input-field field-name="Name" onchange={handleFieldChange}>></lightning-input-field>
+                    <lightning-input-field field-name="Description__c" onchange={handleFieldChange}>></lightning-input-field>
+                    <lightning-input-field field-name="Type__c" data-field="Type__c" onchange={handleFieldChange}>></lightning-input-field>
+                    <lightning-input-field field-name="Family__c" data-field="Family__c" onchange={handleFieldChange}>></lightning-input-field>
+                    <lightning-input-field field-name="Price__c" onchange={handleFieldChange}>></lightning-input-field>
 
                     <lightning-button
                             type="submit"
