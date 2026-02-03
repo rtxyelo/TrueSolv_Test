@@ -129,6 +129,18 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
 
         checkout({ accountId: accId, cartItemsJson: dtoCartJson })
             .then(result => {
+
+                this.cart = [];
+                const itemList = this.template.querySelector('c-item-list');
+                if (itemList) {
+                    itemList.clearCart?.();
+                }
+                const cartModalItems = this.template.querySelector('c-cart-modal');
+                if (cartModalItems) {
+                    cartModalItems.clearCart?.();
+                }
+
+
                 this.showToast('Success', 'Purchase created successfully', 'success');
 
                 this[NavigationMixin.Navigate]({

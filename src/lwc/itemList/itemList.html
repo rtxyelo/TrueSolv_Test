@@ -1,44 +1,69 @@
 <template>
     <lightning-card title="Items">
-        <div class="slds-p-around_small">
-            <!-- Filters -->
-            <lightning-combobox
-                    label="Family"
-                    value={selectedFamily}
-                    options={familyOptions}
-                    onchange={handleFamilyChange}>
-            </lightning-combobox>
+        <div class="slds-p-around_small slds-grid slds-grid_vertical slds-gap_medium">
 
-            <lightning-combobox
-                    label="Type"
-                    value={selectedType}
-                    options={typeOptions}
-                    onchange={handleTypeChange}>
-            </lightning-combobox>
+            <div>
+                <lightning-input
+                        type="search"
+                        label="Search"
+                        placeholder="Search by Name or Description"
+                        value={searchKey}
+                        onchange={handleSearchChange}>
+                </lightning-input>
 
-            <!-- Search -->
-            <lightning-input
-                    type="search"
-                    label="Search"
-                    placeholder="Search by Name or Description"
-                    value={searchKey}
-                    onchange={handleSearchChange}>
-            </lightning-input>
+                <p class="slds-m-top_x-small">
+                    Items found: {itemsCount}
+                </p>
+            </div>
 
-            <!-- Item count -->
-            <p class="slds-m-top_small">Items found: {itemsCount}</p>
+            <div class="slds-grid slds-gutters">
 
-            <!-- Items Grid -->
-            <template if:true={items}>
-                <div class="slds-grid slds-wrap">
-                    <template for:each={itemsWithKey} for:item="item">
-                        <c-item-tile key={item._key} item={item} is-account-data={isAccountData} onshowdetails={handleShowDetails} onaddtocart={handleAddToCart} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3"></c-item-tile>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_9-of-12">
+                    <template if:true={items}>
+                        <div class="slds-grid slds-wrap slds-gutters_small">
+                            <template for:each={itemsWithKey} for:item="item">
+                                <div
+                                        key={item._key}
+                                        class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3"
+                                >
+                                    <c-item-tile
+                                            item={item}
+                                            is-account-data={isAccountData}
+                                            onshowdetails={handleShowDetails}
+                                            onaddtocart={handleAddToCart}>
+                                    </c-item-tile>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <template if:true={isLoading}>
+                        <p>Loading...</p>
                     </template>
                 </div>
-            </template>
-            <template if:true={isLoading}>
-                <p>Loading...</p>
-            </template>
+
+                <div class="slds-col slds-size_1-of-1 slds-large-size_3-of-12">
+                    <div class="slds-box slds-theme_default">
+
+                        <lightning-combobox
+                                label="Family"
+                                value={selectedFamily}
+                                options={familyOptions}
+                                onchange={handleFamilyChange}>
+                        </lightning-combobox>
+
+                        <lightning-combobox
+                                label="Type"
+                                value={selectedType}
+                                options={typeOptions}
+                                onchange={handleTypeChange}
+                                class="slds-m-top_small">
+                        </lightning-combobox>
+
+                    </div>
+                </div>
+
+            </div>
 
             <template if:true={isDetailsModalOpen}>
                 <c-item-details-modal
@@ -46,6 +71,7 @@
                         onclose={handleCloseDetails}>
                 </c-item-details-modal>
             </template>
+
         </div>
     </lightning-card>
 </template>

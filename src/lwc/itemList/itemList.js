@@ -120,4 +120,9 @@ export default class ItemList extends LightningElement {
 
         this.updateCart();
     }
+
+    @api
+    clearCart() {
+        this.cart = [];
+    }
 }

@@ -1,27 +1,32 @@
 <template>
-<!--    <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3" style="height:100%;">-->
-        <!--    <lightning-card class="slds-m-around_small" title={item.Name} icon-name="standard:product_item">-->
-        <lightning-card class="slds-m-around_small" title={item.Name} icon-name="standard:product_item" style="height:100%;">
-            <div class="slds-p-around_small">
-                <p>{item.Description__c}</p>
-                <p>Family: {item.Family__c} | Type: {item.Type__c}</p>
-                <p>Price: ${item.Price__c}</p>
+    <lightning-card
+            class="slds-m-around_small"
+            title={item.Name}
+            icon-name="standard:product_item"
+            style="height:100%;"
+    >
+        <div class="slds-p-around_small slds-box slds-theme_default">
 
-                <template if:true={item.Image__c}>
-                    <!--                <img src={item.Image__c} alt={item.Name} class="slds-m-top_small" style="max-width:100px"/>-->
-                    <img src={item.Image__c} alt={item.Name} class="slds-m-top_small" style="width:100%; max-height:200px; object-fit:cover;"/>
-                </template>
+            <p>{item.Description__c}</p>
 
-                <lightning-button label="Details" onclick={handleDetails} class="slds-m-top_small"></lightning-button>
-<!--                <lightning-button label="Add to Cart" onclick={handleAddToCart} class="slds-m-left_small slds-m-top_small"></lightning-button>-->
+            <template if:true={item.Image__c}>
+                <img
+                        src={item.Image__c}
+                        alt={item.Name}
+                        class="slds-m-top_small"
+                        style="width:100%; max-height:200px; object-fit:cover;"
+                />
+            </template>
+
+            <div class="slds-grid slds-grid_align-spread slds-m-top_small">
+                <lightning-button label="Details" onclick={handleDetails}></lightning-button>
+
                 <template if:true={canAddToCart}>
-                    <lightning-button
-                            label="Add to Cart"
-                            onclick={handleAddToCart}>
-                    </lightning-button>
+                    <lightning-button label="Add to Cart" onclick={handleAddToCart}></lightning-button>
                 </template>
-
             </div>
-        </lightning-card>
-<!--    </div>-->
+
+        </div>
+    </lightning-card>
+
 </template>

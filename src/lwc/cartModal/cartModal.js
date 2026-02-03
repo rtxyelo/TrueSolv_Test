@@ -27,8 +27,13 @@ export default class CartModal extends LightningElement {
         this.dispatchEvent(new CustomEvent('removeone', { detail: itemId }));
     }
 
+    @api
+    clearCart() {
+        this.cartItems = [];
+    }
+
     purchaseCart() {
-        // this.close();
+        this.cartItems = [];
         this.dispatchEvent(new CustomEvent('checkout'));
     }
 }
