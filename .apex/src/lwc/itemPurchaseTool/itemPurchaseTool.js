@@ -1,6 +1,6 @@
 import {LightningElement, api, wire, track} from 'lwc';
 import { getRecord } from 'lightning/uiRecordApi';
-import updateIsManager from '@salesforce/apex/CheckUserIsManagerController.updateIsManager';
+import hasManagerAccess from '@salesforce/apex/CheckUserIsManagerController.hasManagerAccess';
 import checkout from '@salesforce/apex/PurchaseService.checkout';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { NavigationMixin } from 'lightning/navigation';
@@ -47,7 +47,7 @@ export default class ItemPurchaseTool extends NavigationMixin(LightningElement) 
     }
 
     connectedCallback() {
-        updateIsManager()
+        hasManagerAccess()
             .then(result => {
                 this.isManager = result;
                 console.log('Is Manager:', this.isManager);
