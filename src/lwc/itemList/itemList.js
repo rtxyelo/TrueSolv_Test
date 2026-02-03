@@ -73,7 +73,6 @@ export default class ItemList extends LightningElement {
         this.selectedItem = null;
     }
 
-    // диспатчим cart в родительский компонент при каждом изменении
     updateCart() {
         this.dispatchEvent(new CustomEvent('cartupdate', { detail: this.cart }));
     }

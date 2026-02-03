@@ -18,8 +18,6 @@ export default class CartModal extends LightningElement {
         }));
     }
 
-
-
     close() {
         this.dispatchEvent(new CustomEvent('close'));
     }
@@ -27,5 +25,9 @@ export default class CartModal extends LightningElement {
     removeOne(event) {
         const itemId = event.target.dataset.id;
         this.dispatchEvent(new CustomEvent('removeone', { detail: itemId }));
+    }
+
+    purchaseCart() {
+        this.dispatchEvent(new CustomEvent('checkout'));
     }
 }

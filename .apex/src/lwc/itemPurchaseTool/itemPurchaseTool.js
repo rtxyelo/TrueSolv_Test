@@ -1,17 +1,20 @@
 import {LightningElement, api, wire, track} from 'lwc';
 import { getRecord } from 'lightning/uiRecordApi';
 import updateIsManager from '@salesforce/apex/CheckUserIsManagerController.updateIsManager';
+import checkout from '@salesforce/apex/PurchaseService.checkout';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { NavigationMixin } from 'lightning/navigation';
 
 const FIELDS = ['Account.Name', 'Account.AccountNumber', 'Account.Industry'];
 
-export default class ItemPurchaseTool extends LightningElement {
+export default class ItemPurchaseTool extends NavigationMixin(LightningElement) {
     @api recordId;
 
     accountData;
     isManager = false;
     isCreateModalOpen = false;
 
-    @track cart = [];
+    @track cart = []; // { item: Item__c, quantity: number }
     @track isCartOpen = false;
 
     @wire(getRecord, { recordId: '$recordId', fields: FIELDS })
@@ -78,7 +81,69 @@ export default class ItemPurchaseTool extends LightningElement {
             if (this.cart[index].quantity <= 0) {
                 this.cart.splice(index, 1);
             }
-            this.cart = [...this.cart]; // чтобы LWC обновил привязку
+            this.cart = [...this.cart];
         }
+    }
+
+    handleCheckOut() {
+        const dtoCart = this.cart.map(c => ({
+            itemId: c.item.Id,
+            quantity: c.quantity,
+            price: c.item.Price__c
+        })); // { item: Item__c, quantity: number }
+
+        console.log('===============CART ITEM Id:', this.cart[0].item.Id);
+        console.log('===============CART ITEM quantity:', this.cart[0].quantity);
+        console.log('===============CART ITEM Price__c:', this.cart[0].item.Price__c);
+        console.log('===============dtoCart ITEM ID:', dtoCart[0].itemId);
+        console.log('===============dtoCart ITEM ID:', dtoCart[0].quantity);
+        console.log('===============dtoCart ITEM ID:', dtoCart[0].price);
+
+        console.log(JSON.stringify(dtoCart, null, 2));
+
+        const dtoCartJson = JSON.stringify(dtoCart);
+
+        const accId = this.recordId;
+
+        checkout({ accountId: accId, cartItemsJson: dtoCartJson })
+            .then(result => {
+                // result = Id созданной Purchase__c
+                console.log('NAVIGATE TO ID:', result, typeof result);
+
+                this.showToast('Success', 'Purchase created successfully', 'success');
+
+                // // Навигация на страницу Purchase
+                // this[NavigationMixin.Navigate]({
+                //     type: 'standard__recordPage',
+                //     attributes: {
+                //         recordId: result,
+                //         objectApiName: 'Purchase__c',
+                //         actionName: 'view'
+                //     }
+                // });
+
+                // this[NavigationMixin.GenerateUrl]({
+                //     type: 'standard__recordPage',
+                //     attributes: {
+                //         recordId: result,
+                //         objectApiName: 'Purchase__c',
+                //         actionName: 'view'
+                //     }
+                // }).then(url => {
+                //     window.location.assign(url);
+                // });
+
+                window.location.href = '/' + result;
+
+            })
+            .catch(error => {
+                this.showToast('Error', error.body.message, 'error');
+            });
+    }
+
+    showToast(title, message, variant) {
+        this.dispatchEvent(
+            new ShowToastEvent({ title, message, variant })
+        );
     }
 }
