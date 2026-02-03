@@ -3,7 +3,6 @@ private class ItemServiceTest {
 
 	@TestSetup
 	static void setupTestData() {
-		// Создаем тестовые Item__c с разными Family и Type
 		List<Item__c> items = new List<Item__c>{
 				new Item__c(Name='Red Shirt', Type__c='Clothing', Family__c='Standard', Price__c=50, Description__c='Cotton T-shirt'),
 				new Item__c(Name='Blue Jeans', Type__c='Clothing', Family__c='Premium', Price__c=100, Description__c='Denim Pants'),
@@ -83,7 +82,7 @@ private class ItemServiceTest {
 		List<String> families = ItemService.getFamilies();
 		Test.stopTest();
 
-		System.assertEquals(4, families.size(), 'Должны вернуться все уникальные Family (Standard, Premium, Deluxe)');
+		System.assertEquals(3, families.size(), 'Должны вернуться все уникальные Family (Standard, Premium, Deluxe)');
 		System.assert(families.contains('Standard'));
 		System.assert(families.contains('Premium'));
 		System.assert(families.contains('Deluxe'));

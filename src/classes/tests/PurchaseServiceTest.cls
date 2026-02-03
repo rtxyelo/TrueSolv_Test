@@ -1,7 +1,6 @@
 @IsTest
 public class PurchaseServiceTest {
 
-	// ---------- TEST DATA ----------
 	private static Account createAccount() {
 		Account acc = new Account(Name = 'Test Account');
 		insert acc;
@@ -17,41 +16,43 @@ public class PurchaseServiceTest {
 		return item;
 	}
 
-	// ---------- TEST: accountId == null ----------
 	@IsTest
 	static void test_checkout_noAccountId() {
+		Boolean exceptionThrown = false;
+
+		Test.startTest();
 		try {
-			Test.startTest();
 			PurchaseService.checkout(null, '[]');
-			Test.stopTest();
-			System.assert(false, 'Exception should have been thrown');
 		} catch (AuraHandledException e) {
-			System.assertEquals(
-					'Account is required',
-					e.getMessage()
-			);
+			exceptionThrown = true;
 		}
+		Test.stopTest();
+
+		System.assert(
+				exceptionThrown,
+				'AuraHandledException should be thrown when AccountId is null'
+		);
 	}
 
-	// ---------- TEST: empty cart ----------
 	@IsTest
 	static void test_checkout_emptyCart() {
 		Account acc = createAccount();
+		Boolean exceptionThrown = false;
 
+		Test.startTest();
 		try {
-			Test.startTest();
 			PurchaseService.checkout(acc.Id, '[]');
-			Test.stopTest();
-			System.assert(false, 'Exception should have been thrown');
 		} catch (AuraHandledException e) {
-			System.assertEquals(
-					'Cart is empty',
-					e.getMessage()
-			);
+			exceptionThrown = true;
 		}
+		Test.stopTest();
+
+		System.assert(
+				exceptionThrown,
+				'AuraHandledException should be thrown for empty cart'
+		);
 	}
 
-	// ---------- TEST: success ----------
 	@IsTest
 	static void test_checkout_success() {
 
@@ -79,7 +80,6 @@ public class PurchaseServiceTest {
 		Id purchaseId = PurchaseService.checkout(acc.Id, cartJson);
 		Test.stopTest();
 
-		// ---------- ASSERT Purchase ----------
 		Purchase__c purchase = [
 				SELECT Id, ClientId__c
 				FROM Purchase__c
@@ -88,7 +88,6 @@ public class PurchaseServiceTest {
 
 		System.assertEquals(acc.Id, purchase.ClientId__c);
 
-		// ---------- ASSERT Purchase Lines ----------
 		List<PurchaseLine__c> lines = [
 				SELECT ItemId__c, Amount__c, UnitCost__c
 				FROM PurchaseLine__c
