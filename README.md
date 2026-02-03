@@ -1,6 +1,6 @@
 ## Manager Access Logic
 
-Manager access is determined by the presence of system-level permissions  
+Manager access (IsManager field of User object) is determined by the presence of system-level permissions  
 (**Modify All Data**).
 
 Tests validate this logic using `System.runAs()` with a **System Administrator**
