@@ -24,3 +24,18 @@ public with sharing class CheckUserIsManagerController {
         ] > 0;
     }
 }
+```
+---
+
+## Admin access provided
+
+An admin user has been created on the Salesforce Dev instance:
+Email: dev@truesolv.com
+
+Profile: System Administrator
+
+---
+
+## Unmanaged package URL
+
+https://login.salesforce.com/packaging/installPackage.apexp?p0=04tg50000002Ei1
